@@ -1,10 +1,11 @@
-import {cart} from "../pages/cart"
-import { product } from "../pages/product"
-import {listProduct} from "../pages/listProduct"
+import {Cart} from "../pages/cart"
+import { Product } from "../pages/product"
+import {ListProduct} from "../pages/listProduct"
+import {Layout} from "../layout"
 const userRoute = [
-    { path: '/cart', component: cart },
-    { path: '/product/*', component: product },
-    { path: '', component: listProduct }
+    { path: '/cart', component: Cart, Layout:Layout  },
+    { path: '/product/*', component: Product, Layout:Layout  },
+    { path: '', component: ListProduct, Layout:Layout  }
 
 ]
 

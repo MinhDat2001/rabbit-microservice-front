@@ -7,15 +7,20 @@ function App() {
         <div className="App">
             <Routes>
                 {userRoute.map((route, index) => {
-                    const Page = route.component;
-                    return (
-                        <Route
-                            key={index}
-                            path={route.path}
-                            element={<Page />}
-                        />
-                    );
-                })}
+                        const Layout = route.Layout;
+                        const Page = route.component;
+                        return (
+                            <Route
+                                key={index}
+                                path={route.path}
+                                element={
+                                    <Layout>
+                                        <Page />
+                                    </Layout>
+                                }
+                            />
+                        );
+                    })}
             </Routes>
         </div>
     </Router>
