@@ -5,13 +5,12 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 function Product(){
     var id = window.location.href.split("/")[4]
-    console.log(id)
     const [data, setData] = useState({});
         
     useEffect(() => {
         axios.get("http://localhost:8088/api/product/"+id)
         .then((response) => {
-                console.log(response.data);
+                console.log("response data: "+response.data);
                 setData(response.data);
         })
         .catch((error) => {
@@ -25,7 +24,7 @@ function Product(){
                 <div className="preview col-md-6">
                     
                     <div className="preview-pic tab-content">
-                      <div className="tab-pane active" id="pic-1"><img src="http://placekitten.com/400/252" /></div>
+                      <div className="tab-pane active" id="pic-1"><img src={data.images!=undefined? data.images[0].image:""} /></div>
                     </div>
                     
                 </div>
@@ -65,6 +64,8 @@ function AddToCart(){
       })
     .then((response) => {
             window.alert("Thêm thành công")
+            document.cookie = 'token= ' + response.data.userName;
+            console.log(response)
     })
     .catch((error) => {
             console.log(error);

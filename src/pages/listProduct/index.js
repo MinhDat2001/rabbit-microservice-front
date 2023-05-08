@@ -23,7 +23,7 @@ function ListProduct() {
                                         {data.map((item, index) => (
                                                 <div className="single-product">
                                                         <Link to={'/product/'+item.id}>
-                                                                <img className="product-img" src={item.name} />
+                                                                <img style={{width:"250px!important"}} className="product-img" src={ item.images!=undefined? item.images[0].image:""} />
                                                         </Link>
                                                         <div className="part-2">
                                                                 <h3 className="product-title">{item.name}</h3>
