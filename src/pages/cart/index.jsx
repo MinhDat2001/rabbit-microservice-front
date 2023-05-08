@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 function Cart(){
-  
+  let carts = [];   
   const token = document.cookie
         .split('; ')
         .find((row) => row.startsWith('token='))
@@ -11,21 +11,45 @@ function Cart(){
     var headers = {
         'token': token
     }
-  const [data, setData] = useState({});
-      
+  const [data, setData] = useState([]);
+  const [stories, setStories] = useState([]);
+
+   // initialize array that will contain object from nested axios requests
+   let newStories = [];
   useEffect(() => {
       axios.get("http://localhost:8088/api/cart", {
         headers:headers
       })
-      .then((response) => {
-              console.log(response.data);
-              setData(response.data);
-              
+      .then(async (response) => {
+              const data=response.data;
+              data.forEach(element => 
+                {
+                   axios
+                      .get(
+                         `http://localhost:8088/api/product/${element.productId}`)
+                      .then(result => {
+                         const cartDetail=
+                                  { username:element.userName,
+                                    quantity: element.quantity,
+                                    status: element.status,
+                                    product:result.data
+                                  }
+                         carts.push(cartDetail)
+                         setData(data);
+                      })
+                      .catch(err => {
+                         console.log(err);
+                      });
+                })     
+           
       })
+      // .then(()=>setData(carts))
       .catch((error) => {
               console.log(error);
-      });
+      })
   }, []);
+
+
     return (<section className="h-100 h-custom">
     <div className="container h-100">
       <div className="row d-flex justify-content-center align-items-center h-100">
@@ -40,7 +64,7 @@ function Cart(){
                   <div className="card mb-3">
                     <div className="card-body">
 
-                    {data.map((item, index) => (
+                    {data.map(() => (
                             <div className="d-flex justify-content-between">
                             <div className="d-flex flex-row align-items-center">
                               <div>
@@ -49,7 +73,7 @@ function Cart(){
                                   className="img-fluid rounded-3" alt="Shopping item" style={{width: "65px"}}/>
                               </div>
                               <div className="ms-3">
-                                <h5>Iphone 11 pro</h5>
+                                <h5>{data.length}</h5>
                                 <p className="small mb-0">256GB, Navy Blue</p>
                               </div>
                             </div>
