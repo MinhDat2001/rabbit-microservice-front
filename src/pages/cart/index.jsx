@@ -27,8 +27,8 @@ function Cart() {
                   phone: document.getElementById("Phone").value.trim()  }
       })
         .then((response) => {
-          console.log(response.data)
-          console.log(dataSend)
+          window.alert("Mua hàng thành công")
+          window.location.href="/"
         })
         .catch((error) => {
           console.log(error);
@@ -46,16 +46,14 @@ function Cart() {
     }
     return 0
   }  
-  let carts = [];
   const dataRef= useRef()
   var headers = {
     'token': token
   }
   const [data, setData] = useState([]);
-  const [user, setUser] = useState([]);
+  const [totalPrice, setPrice] = useState(0);
 
   // initialize array that will contain object from nested axios requests
-  let newStories = [];
   useEffect(() => {
     const getCart = async () => {
       const u = await axios.get("http://localhost:8088/api/cart", {
@@ -77,6 +75,7 @@ function Cart() {
                     status: element.status,
                     product: result.data
                   }
+                  setPrice(totalPrice+cartDetail.quantity*cartDetail.product.price)
 
 
                   return cartDetail;
@@ -94,6 +93,7 @@ function Cart() {
     }
     getCart()
   }, []);
+
   useEffect(() => {
     // lấy products
     axios.get("http://localhost:8088/api/user", {
@@ -108,6 +108,7 @@ function Cart() {
         console.log(error);
       });
   }, []);
+  
 
 
   return (<section className="h-100 h-custom">
@@ -138,10 +139,10 @@ function Cart() {
                           </div>
                           <div className="d-flex flex-row align-items-center">
                             <div style={{ width: "50px" }}>
-                              <h5 className="fw-normal mb-0">{item.product.quantity}</h5>
+                              <h5 className="fw-normal mb-0">{item.quantity}</h5>
                             </div>
                             <div style={{ width: "150px" }}>
-                              <h5 className="mb-0">{item.product.price} vnđ</h5>
+                              <h5 className="mb-0">{item.product.price.toLocaleString()} vnđ</h5>
                             </div>
                           </div>
                         </div>
@@ -183,7 +184,7 @@ function Cart() {
 
                       <div className="d-flex justify-content-between mb-4">
                         <p className="mb-2">Tổng tiền</p>
-                        <p className="mb-2">1 000 000 vnd</p>
+                        <p className="mb-2">{totalPrice.toLocaleString()} vnd</p>
                       </div>
 
                       <button type="button" className="btn btn-info btn-block btn-lg">
