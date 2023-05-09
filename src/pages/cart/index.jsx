@@ -17,36 +17,40 @@ function Cart(){
    // initialize array that will contain object from nested axios requests
    let newStories = [];
   useEffect(() => {
-      axios.get("http://localhost:8088/api/cart", {
+      const getCart=async ()=>{
+      const u = await axios.get("http://localhost:8088/api/cart", {
         headers:headers
       })
       .then(async (response) => {
-              const data=response.data;
-              data.forEach(element => 
-                {
-                   axios
-                      .get(
-                         `http://localhost:8088/api/product/${element.productId}`)
-                      .then(result => {
-                         const cartDetail=
-                                  { username:element.userName,
-                                    quantity: element.quantity,
-                                    status: element.status,
-                                    product:result.data
-                                  }
-                         carts.push(cartDetail)
-                         setData(data);
-                      })
-                      .catch(err => {
-                         console.log(err);
-                      });
-                })     
-           
+              const datas=response.data;
+
+            return  Promise.all(
+                datas.map(element => 
+                  {
+                   return  axios
+                        .get(
+                           `http://localhost:8088/api/product/${element.productId}`)
+                        .then(result => {
+                           const cartDetail=
+                                    { username:element.userName,
+                                      quantity: element.quantity,
+                                      status: element.status,
+                                      product:result.data
+                                    }
+            
+                           return cartDetail;
+                        })
+                        .catch(err => {
+                           console.log(err);
+                        });
+                  })
+      
+              )
+          
       })
-      // .then(()=>setData(carts))
-      .catch((error) => {
-              console.log(error);
-      })
+      setData(u)
+      }
+      getCart()
   }, []);
 
 
