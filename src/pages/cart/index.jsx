@@ -9,14 +9,14 @@ const token = document.cookie
 
 function Cart() {
   async function Checkout() {
-    console.log(dataRef.current)
+    console.log("check out")
     var dataSend=[]
     dataRef.current.map((item)=>{
       dataSend.push({productId:item.product.id,
         quantity:item.quantity
       })
     })
-    if (ValidateInput() === 1) {
+    if (ValidateInput() === 0) {
       var headers = {
         'token': token
       }
@@ -125,7 +125,7 @@ function Cart() {
                     <div className="card-body">
 
                       {data.map((item) => (
-                        <div  className="d-flex justify-content-between">
+                        <div  className="d-flex justify-content-between" style={{marginTop:"10px"}}>
                           <div className="d-flex flex-row align-items-center">
                             <div>
                               <img
